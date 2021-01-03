@@ -1,4 +1,14 @@
+'''
+This code was created to the University Subject Numerical Calculus at UFMA
+
+Developed by Beatriz Salles
+
+Atention: Remove quotation marks one by one in each example before using an example.
+'''
 import math
+from prettytable import PrettyTable # This is just a lib to print the results in a table.
+
+
 
 def diff_phi_x (x):
   h =  10**(-10)
@@ -6,42 +16,76 @@ def diff_phi_x (x):
   return diff_phi_x
 
 def fixed_point(function):
+  a = float(input('Digite início do intervalo: '))
+  b = float(input("Digite o final do intervalo: "))
   x0 = float(input('Digite a aproximaçao inicial: '))
-  e1 = float(input('Digita a precisão 1: '))
-  e2 = float(input('Digita a precisão 2: '))
+  e1 = float(input('Digite a precisão 1: '))
+  e2 = float(input('Digite a precisão 2: '))
+
 
   max_iteration = int(input('Número máximo de iterações: '))
-  iteration = 1
+  iteration = 0
+
+  fa = function(a)
+  fb = function(b)
 
   root = phi_x(x0) # First iteration
-
-  if (abs(diff_phi_x(x0)) > 1):
-    print('A sequência irá divergir.')
+  
+  if( fa*fb > 0):
+    print(10*'-+-')
+    print(f'Não existe raiz no intervalo [{a}, {b}]')
   else:
-    while (iteration <= max_iteration):
-      iteration += 1
-      x0 = root # Thi is the current k iteration
-      root =  phi_x(x0)  # Calculate the new k+1 iteration
+    
+    if (abs(diff_phi_x(x0)) > 1):
+      print(15*'-+-')
+      print('A sequência irá divergir.')
+    else:
+      table = PrettyTable()
+      table.field_names = ['Iteração', 'x', 'f(x)']
+      table.add_row(['0', x0, round(function(x0),6)])
+      
 
-      # Stopping Criteria
-      if ((abs(root - x0) < e2) or (abs(function(root)) < e1)):
-        print(10*'-+-')
-        print(f'Valor da raiz: {round(root, 4)}\nTotal de iterações: {iteration}')
-        break
-      elif(iteration > max_iteration):
-        print(10*'-+-')
-        print(f'O método falhou após {max_iteration} iterações.')
-        break
+      while (iteration <= max_iteration):
+        iteration += 1
+        x0 = root # This is the current k iteration
+        root =  phi_x(x0)  # Calculate the new k+1 iteration
+
+        
+        # Stopping Criteria
+        if (iteration > max_iteration):
+          print(15*'-+-')
+          print(f'O método falhou após {iteration} iterações.')
+          break
+        
+        else:
+          table.add_row([iteration, round(x0, 6), round(function(x0),6)])
+          
+          if ((abs(root - x0) < e2) or (abs(function(root)) < e1)):
+            print(table)
+            print(f'Valor da raiz: {round(root, 6)}\nTotal de iterações: {iteration}')
+            break
+          
+
 
 # Define Functions here
 
-# function = lambda x: x**3 - x - 1
-# phi_x = lambda x: math.pow(x+1, 1/3) #x0 = 1 e1=e2=0.001
+# Equations to Example 1
 
-# function =  lambda x: x**2 + x - 6
-# phi_x = lambda x: math.pow(-x + 6, 1/2) # x0 = 1.5 e1 = -3 e e2 =2
+function = lambda x: -math.exp(x) + x + 2
+phi_x = lambda x: math.exp(x) - 2
 
-function = lambda x: x**3 -9*x + 3
-phi_x = lambda x: ((x**3)/9) + (1/3) # x0 = 0.5 e1=e2=0.0005
+
+# Equations to Example 2
+
+'''
+function = lambda x: math.cos(x) - math.sqrt(x)
+phi_x = lambda x: math.pow(math.cos(x), 2)
+''' 
+
+# Euqations to Example 3
+'''
+function = lambda x: x**2 - x -2 
+phi_x = lambda x: x**2 - 2
+'''
 
 fixed_point(function)
